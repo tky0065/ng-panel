@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Styles spécifiques à la bibliothèque */
+@layer components {
+  .panel-layout {
+    @apply min-h-screen bg-base-100;
+  }
+
+  .panel-header {
+    @apply navbar bg-base-200 px-4 shadow-lg;
+  }
+
+  .panel-sidebar {
+    @apply drawer-side bg-base-200 w-64 min-h-screen border-r border-base-300;
+  }
+
+  .panel-content {
+    @apply flex-1 p-4;
+  }
+
+  .panel-footer {
+    @apply footer footer-center p-4 bg-base-200 text-base-content;
+  }
+}
