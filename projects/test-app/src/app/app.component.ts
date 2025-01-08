@@ -1,13 +1,14 @@
-import {PanelService} from '../../../ng-panel/src/lib/services/panel.service';
-import {Component, inject, OnInit} from '@angular/core';
+// app.component.ts
+import { Component, inject, OnInit } from '@angular/core';
 import {PanelLayoutComponent} from '../../../ng-panel/src/lib/components/panel-layout/panel-layout.component';
-import {RouterOutlet} from '@angular/router';
+import {PanelService} from '../../../ng-panel/src/lib/services/panel.service';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ PanelLayoutComponent],
-  template: `<lib-panel-layout />`
+  imports: [PanelLayoutComponent],
+  template: `<lib-panel-layout/>`
 })
 export class AppComponent implements OnInit {
   private panelService = inject(PanelService);
@@ -15,12 +16,31 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     // Configuration globale du panel
     this.panelService.setConfig({
-      title: 'Mon Administration',
-      logo: 'assets/logo.png',
-      theme: {
-        primary: '#4F46E5',
-        secondary: '#7C3AED',
-        accent: '#F59E0B'
+      title: 'Ng-Panel',
+      logo: 'https://placehold.co/60x60/png',
+      profileConfig: {
+        avatar: 'https://placehold.co/60x60/png',
+        username: 'Enokdev',
+        actions: [
+          {
+            label: 'Profile',
+            icon: 'person',
+            route: '/profile'
+          },
+          {
+            label: 'Settings',
+            icon: 'settings',
+            route: '/settings'
+          },
+          {
+            label: 'Logout',
+            icon: 'logout',
+            action: () => {
+              console.log('Logout clicked');
+              // Implémentez votre logique de déconnexion ici
+            }
+          }
+        ]
       },
       menu: [
         {
@@ -46,7 +66,8 @@ export class AppComponent implements OnInit {
         }
       ]
     });
-    // Enregistrement des modèles
+
+    // Enregistrer les modèles
     this.registerModels();
   }
 

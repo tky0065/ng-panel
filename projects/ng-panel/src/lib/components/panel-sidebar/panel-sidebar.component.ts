@@ -1,88 +1,54 @@
-import { Component, Input, computed, inject } from '@angular/core';
-import {Router, RouterLink, RouterLinkActive} from '@angular/router';
+// panel-sidebar.component.ts
+import { Component, input } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MenuItem } from '../../models/panel-config.model';
 
 @Component({
   selector: 'lib-panel-sidebar',
   standalone: true,
+  imports: [RouterLink, RouterLinkActive],
   template: `
-    <aside class="drawer-side bg-base-200 w-64 min-h-screen">
-      <div class="p-4">
-        <ul class="menu menu-vertical space-y-2">
-          @for (item of menu; track item.label) {
+    <nav class="h-full ">
+      <ul class="menu menu-vertical p-4">
+        @for (item of menu(); track item.label) {
+          <li>
             @if (!item.children) {
-              <li>
-                <a
-                  [routerLink]="item.route"
-                  routerLinkActive="active"
-                  class="flex items-center gap-2 "
-                >
-                  @if (item.icon) {
-                    <i class="material-icons">{{ item.icon }}</i>
-                  }
-                  {{ item.label }} "User"
-                </a>
-              </li>
+              <a [routerLink]="item.route"
+                 routerLinkActive="active bg-primary text-primary-content">
+                @if (item.icon) {
+                  <i class="material-icons">{{item.icon}}</i>
+                }
+                {{item.label}}
+              </a>
             } @else {
-              <li>
-                <details [open]="isParentActive(item)">
-                  <summary class="flex items-center gap-2">
-                    @if (item.icon) {
-                      <i class="material-icons">{{ item.icon }}</i>
-                    }
-                    {{ item.label }}
-                  </summary>
-                  <ul>
-                    @for (child of item.children; track child.label) {
-                      <li>
-                        <a
-                          [routerLink]="child.route"
-                          routerLinkActive="active"
-                          class="flex items-center gap-2"
-                        >
-                          @if (child.icon) {
-                            <i class="material-icons">{{ child.icon }}</i>
-                          }
-                          {{ child.label }}
-                        </a>
-                      </li>
-                    }
-                  </ul>
-                </details>
-              </li>
+              <details>
+                <summary>
+                  @if (item.icon) {
+                    <i class="material-icons">{{item.icon}}</i>
+                  }
+                  {{item.label}}
+                </summary>
+                <ul>
+                  @for (child of item.children; track child.label) {
+                    <li>
+                      <a [routerLink]="child.route"
+                         routerLinkActive="active bg-primary text-primary-content">
+                        @if (child.icon) {
+                          <i class="material-icons">{{child.icon}}</i>
+                        }
+                        {{child.label}}
+                      </a>
+                    </li>
+                  }
+                </ul>
+              </details>
             }
-          }
-        </ul>
-      </div>
-    </aside>
-  `,
-  imports: [
-    RouterLink,
-    RouterLinkActive
-  ],
-  styles: [`
-    .active {
-      @apply bg-primary text-primary-content;
-    }
-
-    .drawer-side {
-      @apply border-r border-base-300;
-    }
-  `]
+          </li>
+        }
+      </ul>
+    </nav>
+  `
 })
 export class PanelSidebarComponent {
-  @Input() menu: MenuItem[] = [];
-  private router = inject(Router);
-
-  isParentActive(item: MenuItem): boolean {
-    if (!item.children) return false;
-    return item.children.some(child =>
-      this.router.isActive(child.route || '', {
-        paths: 'exact',
-        queryParams: 'exact',
-        fragment: 'ignored',
-        matrixParams: 'ignored'
-      })
-    );
-  }
+  readonly menu = input<MenuItem[]>([]);
 }

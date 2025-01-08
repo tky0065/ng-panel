@@ -1,0 +1,26 @@
+<div class="p-4 space-y-4">
+  <div class="flex justify-between items-center">
+    <h1 class="text-2xl font-bold">Utilisateurs</h1>
+    <div>
+      @if (!showForm()) {
+        <button class="btn btn-primary" (click)="toggleForm()">
+          Ajouter un utilisateur
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (showForm()) {
+    <lib-dynamic-form
+      modelName="user"
+      [initialData]="selectedUser()"
+      (onSubmit)="handleSubmit($event)"
+      (onCancel)="toggleForm()"
+    />
+  } @else {
+    <lib-dynamic-table
+      modelName="user"
+      [data]="users()"
+    />
+  }
+</div>

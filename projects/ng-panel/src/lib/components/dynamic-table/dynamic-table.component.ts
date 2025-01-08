@@ -1,37 +1,44 @@
-import { Component, Input, inject, signal, computed } from '@angular/core';
-import { ModelConfig } from '../../models/panel-config.model';
+import {Component, Input, inject, signal, computed, input} from '@angular/core';
+
 import { PanelService } from '../../services/panel.service';
+
 
 @Component({
   selector: 'lib-dynamic-table',
   standalone: true,
+  imports: [],
   template: `
-    @if (model(); as modelConfig) {
-      <div class="overflow-x-auto">
-        <table class="table w-full">
-          <thead>
+    <div class="overflow-x-auto" [class.hidden]="!model()">
+      <table class="table w-full">
+        <thead>
           <tr>
-            @for (field of modelConfig.fields; track field.name) {
-              <th>{{ field.label }}</th>
-            }
-            @if (modelConfig.actions?.length) {
-              <th>Actions</th>
+            @if (model()) {
+              @for (field of model()?.fields; track field) {
+                <th>
+                  {{ field.label }}
+                </th>
+              }
+              @if (model()?.actions?.length) {
+                <th>Actions</th>
+              }
             }
           </tr>
-          </thead>
-          <tbody>
-            @for (item of datas(); track item.id) {
+        </thead>
+        <tbody>
+          @if (model()) {
+            @for (item of datas(); track trackById($index, item)) {
               <tr>
-                @for (field of modelConfig.fields; track field.name) {
-                  <td>{{ item[field.name] }}</td>
-                }
-                @if (modelConfig.actions?.length) {
+                @for (field of model()?.fields; track field) {
                   <td>
-                    @for (action of modelConfig.actions; track action.name) {
+                    {{ item[field.name] }}
+                  </td>
+                }
+                @if (model()?.actions?.length) {
+                  <td>
+                    @for (action of model()?.actions; track action) {
                       <button
                         class="btn btn-{{ action.type }} btn-sm mr-2"
-                        (click)="action.handler?.(item)"
-                      >
+                        (click)="action.handler?.(item)">
                         @if (action.icon) {
                           <i class="{{ action.icon }}"></i>
                         }
@@ -42,14 +49,15 @@ import { PanelService } from '../../services/panel.service';
                 }
               </tr>
             }
-          </tbody>
-        </table>
-      </div>
-    }
-  `
+          }
+        </tbody>
+      </table>
+    </div>
+    `
 })
 export class DynamicTableComponent {
-  @Input() modelName!: string;
+  readonly modelName = input.required<string>();
+
   @Input({ required: true }) set data(value: any[]) {
     this.dataSignal.set(value);
   }
@@ -58,5 +66,9 @@ export class DynamicTableComponent {
   private dataSignal = signal<any[]>([]);
 
   datas = this.dataSignal.asReadonly();
-  model = computed(() => this.panelService.getModel(this.modelName));
+  model = computed(() => this.panelService.getModel(this.modelName()));
+
+  trackById(index: number, item: any): any {
+    return item.id || index;
+  }
 }

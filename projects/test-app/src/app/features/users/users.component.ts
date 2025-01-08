@@ -7,30 +7,7 @@ import {DynamicFormComponent} from '../../../../../ng-panel/src/lib/components/d
   selector: 'app-users',
   standalone: true,
   imports: [DynamicTableComponent, DynamicFormComponent],
-  template: `
-    <div class="p-4 space-y-4">
-      <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold">Utilisateurs</h1>
-        <button class="btn btn-primary" [@if]="!showForm()" (click)="toggleForm()">
-          Ajouter un utilisateur
-        </button>
-      </div>
-
-      @if (showForm()) {
-        <lib-dynamic-form
-          modelName="user"
-          [initialData]="selectedUser()"
-          (onSubmit)="handleSubmit($event)"
-          (onCancel)="toggleForm()"
-        />
-      } @else {
-        <lib-dynamic-table
-          modelName="user"
-          [data]="users()"
-        />
-      }
-    </div>
-  `
+  templateUrl: './users.component.html'
 })
 export class UsersComponent {
   showForm = signal(false);

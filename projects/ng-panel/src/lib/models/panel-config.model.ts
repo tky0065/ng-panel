@@ -53,3 +53,36 @@ export interface FormConfig {
   submitLabel?: string;
   cancelLabel?: string;
 }
+
+export interface ThemeConfig {
+  name: string;
+  label: string;
+  icon?: string;
+}
+
+export interface ProfileConfig {
+  avatar?: string;
+  username?: string;
+  actions: ProfileAction[];
+}
+
+export interface ProfileAction {
+  label: string;
+  icon?: string;
+  action?: () => void;
+  route?: string;
+}
+
+export interface PanelConfig {
+  title: string;
+  logo?: string;
+  theme?: {
+    primary: string;
+    secondary: string;
+    accent: string;
+  };
+  menu: MenuItem[];
+  profileConfig?: ProfileConfig; // Ajout de la configuration du profil
+}
+
+
