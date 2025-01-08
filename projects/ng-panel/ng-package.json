@@ -5,7 +5,11 @@
     "entryFile": "src/public-api.ts"
   },
   "assets": [
-    "src/lib/styles/**/*.css",
+    {
+      "input": "src/lib/styles",
+      "output": "styles",
+      "glob": "**/*.css"
+    },
     "tailwind.config.js"
   ]
 }

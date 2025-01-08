@@ -12,11 +12,7 @@ export const routes: Routes = [
     loadComponent: () => import('./features/users/users.component')
       .then(m => m.UsersComponent)
   },
-  // {
-  //   path: 'products',
-  //   loadComponent: () => import('./features/products/products.component')
-  //     .then(m => m.ProductsComponent)
-  // },
+
   {
     path: '',
     redirectTo: 'dashboard',
