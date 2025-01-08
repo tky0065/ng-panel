@@ -1,63 +1,111 @@
-# NgPanel
+# ng-panel
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.0.
+A modern, dynamic admin panel library for Angular applications with DaisyUI and TailwindCSS.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Installation
 
 ```bash
-ng generate component component-name
+npm install ng-panel tailwindcss daisyui
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Configuration
 
-```bash
-ng generate --help
+1. Add TailwindCSS configuration:
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  content: [
+    "./src/**/*.{html,ts}",
+    "./node_modules/ng-panel/**/*.{html,ts}"
+  ],
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: true
+  }
+}
 ```
 
-## Building
+2. Import styles in your styles.css:
 
-To build the library, run:
-
-```bash
-ng build ng-panel
+```css
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 ```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
+## Usage
 
-### Publishing the Library
+```typescript
+// app.component.ts
+import { Component, OnInit } from '@angular/core';
+import { PanelService, PanelLayoutComponent } from 'ng-panel';
 
-Once the project is built, you can publish your library by following these steps:
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [PanelLayoutComponent],
+  template: '<lib-panel-layout/>'
+})
+export class AppComponent implements OnInit {
+  constructor(private panelService: PanelService) {}
 
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/ng-panel
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
+  ngOnInit() {
+    this.panelService.setConfig({
+      title: 'Admin Panel',
+      menu: [
+        {
+          label: 'Dashboard',
+          icon: 'dashboard',
+          route: '/dashboard'
+        }
+        // ... more menu items
+      ]
+    });
+  }
+}
 ```
 
-## Running end-to-end tests
+## Features
 
-For end-to-end (e2e) testing, run:
+- Fully responsive layout
+- Dynamic forms
+- Dynamic tables
+- Statistics cards
+- Theme switching
+- Configurable menu
+- Material Icons support
+- DaisyUI components
 
-```bash
-ng e2e
+## Components
+
+### DynamicTableComponent
+
+```typescript
+<lib-dynamic-table
+  modelName="user"
+  [data]="users"
+/>
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### DynamicFormComponent
 
-## Additional Resources
+```typescript
+<lib-dynamic-form
+  modelName="user"
+  [initialData]="userData"
+  (onSubmit)="handleSubmit($event)"
+/>
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### DynamicStatsComponent
+
+```typescript
+<lib-dynamic-stats
+  [data]="statsData"
+/>
+```
+
+## License
+
+MIT
