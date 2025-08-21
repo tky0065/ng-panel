@@ -1084,8 +1084,9 @@ users = signal<User[]>([]);
 
 | ng-panel | Angular | Node.js | TailwindCSS | DaisyUI |
 |----------|---------|---------|-------------|---------|
-| 1.x      | 17.x    | 18.x    | 3.x         | 4.x     |
-| 2.x      | 18.x    | 20.x    | 3.x         | 4.x     |
+| 1.x      | 19.x    | 18.x    | 3.x         | 4.x     |
+| 2.x      | 20.x    | 20.x    | 3.x         | 4.x     |
+| 2.1+     | 21.x    | 22.x    | 3.x         | 4.x     |
 
 ## 🛠️ Développement et Contribution
 
@@ -1188,7 +1189,7 @@ Suivez la convention [Conventional Commits](https://www.conventionalcommits.org/
 - [ ] Widget dashboard configurables
 
 ### Version 2.0 (Future)
-- [ ] Support Angular 18+
+- [ ] Support Angular 21+
 - [ ] SSR/SSG optimizations
 - [ ] Micro-frontends support
 - [ ] Advanced analytics dashboard

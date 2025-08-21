@@ -1,6 +1,5 @@
-import {Component, Input, inject, computed, input, output, OnInit} from '@angular/core';
+import {Component, inject, computed, input, output, OnInit, ChangeDetectionStrategy, effect} from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgClass } from '@angular/common';
 
 import { ModelConfig } from '../../models/panel-config.model';
 import { PanelService } from '../../services/panel.service';
@@ -8,7 +7,8 @@ import { PanelService } from '../../services/panel.service';
 @Component({
   selector: 'lib-dynamic-form',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="dynamic-form" [class.hidden]="!model()">
       <form [formGroup]="form" (ngSubmit)="submitForm()" class="space-y-4">
@@ -74,12 +74,7 @@ import { PanelService } from '../../services/panel.service';
 })
 export class DynamicFormComponent implements OnInit {
   readonly modelName = input.required<string>();
-
-  @Input() set initialData(value: any) {
-    if (value) {
-      this.form.patchValue(value);
-    }
-  }
+  readonly initialData = input<any>();
 
   readonly onSubmit = output<any>();
   readonly onCancel = output<void>();
@@ -89,6 +84,16 @@ export class DynamicFormComponent implements OnInit {
 
   form!: FormGroup;
   model = computed(() => this.panelService.getModel(this.modelName()));
+
+  constructor() {
+    // Use effect to patch form when initialData changes
+    effect(() => {
+      const data = this.initialData();
+      if (data && this.form) {
+        this.form.patchValue(data);
+      }
+    });
+  }
 
   ngOnInit() {
     const modelConfig = this.model();

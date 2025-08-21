@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ToastService, ToastMessage } from '../../services/toast.service';
 import { NgClass } from '@angular/common';
 
@@ -6,6 +6,7 @@ import { NgClass } from '@angular/common';
   selector: 'lib-toast-container',
   standalone: true,
   imports: [NgClass],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="toast toast-top toast-end z-50">
       @for (toast of toastService.toasts(); track toast.id) {
