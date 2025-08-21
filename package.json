@@ -1,5 +1,8 @@
 {
   "name": "@enokdev/ng-panel",
+   "publishConfig": {
+    "access": "public"
+  },
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
