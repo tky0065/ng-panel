@@ -5,7 +5,7 @@ import { RouterOutlet } from '@angular/router';
 import { PanelHeaderComponent } from '../panel-header/panel-header.component';
 import { PanelSidebarComponent } from '../panel-sidebar/panel-sidebar.component';
 import { PanelFooterComponent } from '../panel-footer/panel-footer.component';
-import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { ToastContainerComponent } from '../toast-container/toast-container.component';
 
 @Component({
   selector: 'lib-panel-layout',
@@ -36,6 +36,9 @@ import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-b
 
       <!-- Footer fixe en bas -->
       <lib-panel-footer class="flex-none h-12"/>
+      
+      <!-- Toast container pour les notifications -->
+      <lib-toast-container/>
     </div>
   `,
   imports: [
@@ -43,6 +46,7 @@ import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-b
     PanelHeaderComponent,
     PanelSidebarComponent,
     PanelFooterComponent,
+    ToastContainerComponent,
   ],
   styles: [`
     :host {

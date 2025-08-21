@@ -1,5 +1,6 @@
-import {Component, Input, inject, computed, input, output} from '@angular/core';
-import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import {Component, Input, inject, computed, input, output, OnInit} from '@angular/core';
+import { FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgClass } from '@angular/common';
 
 import { ModelConfig } from '../../models/panel-config.model';
 import { PanelService } from '../../services/panel.service';
@@ -7,7 +8,7 @@ import { PanelService } from '../../services/panel.service';
 @Component({
   selector: 'lib-dynamic-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgClass],
   template: `
     <div class="dynamic-form" [class.hidden]="!model()">
       <form [formGroup]="form" (ngSubmit)="submitForm()" class="space-y-4">
@@ -15,13 +16,20 @@ import { PanelService } from '../../services/panel.service';
           @for (field of model()?.fields; track field) {
             <div class="form-control">
               <label class="label">
-                <span class="label-text">{{ field.label }}</span>
+                <span class="label-text">
+                  {{ field.label }}
+                  @if (field.required) {
+                    <span class="text-red-500">*</span>
+                  }
+                </span>
               </label>
               @switch (field.type) {
                 @case ('select') {
                   <select
                     [formControlName]="field.name"
+                    [class]="getFieldClasses(field.name)"
                     class="select select-bordered">
+                    <option value="">Select an option</option>
                     @for (option of field.options; track option) {
                       <option
                         [value]="option.value">
@@ -40,8 +48,14 @@ import { PanelService } from '../../services/panel.service';
                   <input
                     [type]="field.type"
                     [formControlName]="field.name"
+                    [class]="getFieldClasses(field.name)"
                     class="input input-bordered"/>
                 }
+              }
+              @if (getFieldError(field.name)) {
+                <label class="label">
+                  <span class="label-text-alt text-red-500">{{ getFieldError(field.name) }}</span>
+                </label>
               }
             </div>
           }
@@ -49,7 +63,7 @@ import { PanelService } from '../../services/panel.service';
             <button type="button" class="btn" (click)="onCancel.emit()">
               {{ model()?.form?.cancelLabel || 'Cancel' }}
             </button>
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
               {{ model()?.form?.submitLabel || 'Submit' }}
             </button>
           </div>
@@ -58,7 +72,7 @@ import { PanelService } from '../../services/panel.service';
     </div>
     `
 })
-export class DynamicFormComponent {
+export class DynamicFormComponent implements OnInit {
   readonly modelName = input.required<string>();
 
   @Input() set initialData(value: any) {
@@ -86,7 +100,21 @@ export class DynamicFormComponent {
   private createForm(modelConfig: ModelConfig): FormGroup {
     const group: any = {};
     for (const field of modelConfig.fields) {
-      group[field.name] = ['', field.validators || []];
+      const validators = [];
+      
+      if (field.required) {
+        validators.push(Validators.required);
+      }
+      
+      if (field.type === 'email') {
+        validators.push(Validators.email);
+      }
+      
+      if (field.validators) {
+        validators.push(...field.validators);
+      }
+      
+      group[field.name] = ['', validators];
     }
     return this.fb.group(group);
   }
@@ -94,6 +122,34 @@ export class DynamicFormComponent {
   submitForm() {
     if (this.form.valid) {
       this.onSubmit.emit(this.form.value);
+    } else {
+      // Mark all fields as touched to show validation errors
+      Object.keys(this.form.controls).forEach(key => {
+        this.form.get(key)?.markAsTouched();
+      });
     }
+  }
+
+  getFieldClasses(fieldName: string): string {
+    const control = this.form.get(fieldName);
+    if (control?.invalid && control?.touched) {
+      return 'border-red-500';
+    }
+    return '';
+  }
+
+  getFieldError(fieldName: string): string | null {
+    const control = this.form.get(fieldName);
+    if (control?.invalid && control?.touched) {
+      if (control.errors?.['required']) {
+        return 'This field is required';
+      }
+      if (control.errors?.['email']) {
+        return 'Please enter a valid email address';
+      }
+      // Add more error types as needed
+      return 'This field is invalid';
+    }
+    return null;
   }
 }

@@ -7,6 +7,7 @@ export interface PanelConfig {
     accent: string;
   };
   menu: MenuItem[];
+  profileConfig?: ProfileConfig;
 }
 
 export interface MenuItem {
@@ -26,7 +27,7 @@ export interface ModelConfig {
 
 export interface FieldConfig {
   name: string;
-  type: 'text' | 'number' | 'date' | 'boolean' | 'select';
+  type: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'email' | 'password';
   label: string;
   required?: boolean;
   options?: { label: string; value: any }[];
@@ -71,18 +72,6 @@ export interface ProfileAction {
   icon?: string;
   action?: () => void;
   route?: string;
-}
-
-export interface PanelConfig {
-  title: string;
-  logo?: string;
-  theme?: {
-    primary: string;
-    secondary: string;
-    accent: string;
-  };
-  menu: MenuItem[];
-  profileConfig?: ProfileConfig; // Ajout de la configuration du profil
 }
 
 

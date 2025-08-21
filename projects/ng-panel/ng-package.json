@@ -9,7 +9,6 @@
       "input": "src/lib/styles",
       "output": "styles",
       "glob": "**/*.css"
-    },
-    "tailwind.config.js"
+    }
   ]
 }
