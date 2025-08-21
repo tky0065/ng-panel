@@ -1,6 +1,5 @@
 import {Component, inject, computed, input, output, OnInit, ChangeDetectionStrategy, effect} from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgClass } from '@angular/common';
 
 import { ModelConfig } from '../../models/panel-config.model';
 import { PanelService } from '../../services/panel.service';
@@ -8,7 +7,7 @@ import { PanelService } from '../../services/panel.service';
 @Component({
   selector: 'lib-dynamic-form',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="dynamic-form" [class.hidden]="!model()">
