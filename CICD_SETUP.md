@@ -38,6 +38,8 @@ The `prod` branch should be your main release branch. Consider setting up branch
 
 ### 1. NPM Token Configuration
 
+
+
 You need to set up an NPM authentication token in your GitHub repository secrets:
 
 1. **Generate NPM Token:**
