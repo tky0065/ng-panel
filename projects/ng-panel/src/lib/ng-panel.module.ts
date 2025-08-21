@@ -10,6 +10,20 @@ import { PanelFooterComponent } from './components/panel-footer/panel-footer.com
 import { DynamicTableComponent } from './components/dynamic-table/dynamic-table.component';
 import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 
+/**
+ * @deprecated NgPanelModule is deprecated. Use standalone components directly instead.
+ * Import individual components like PanelLayoutComponent, PanelHeaderComponent, etc.
+ * This module will be removed in v2.0.
+ * 
+ * Example migration:
+ * ```typescript
+ * // Before
+ * import { NgPanelModule } from '@enokdev/ng-panel';
+ * 
+ * // After
+ * import { PanelLayoutComponent, PanelService } from '@enokdev/ng-panel';
+ * ```
+ */
 @NgModule({
   imports: [
     CommonModule,

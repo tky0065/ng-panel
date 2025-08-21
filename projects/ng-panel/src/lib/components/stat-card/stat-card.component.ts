@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, input, signal, ChangeDetectionStrategy } from '@angular/core';
 
 export interface StatItem {
   title: string;
@@ -11,6 +11,7 @@ export interface StatItem {
 @Component({
   selector: 'lib-dynamic-stats',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       @for (stat of stats(); track stat.title) {
@@ -34,13 +35,7 @@ export interface StatItem {
   `
 })
 export class DynamicStatsComponent {
-  private statsSignal = signal<StatItem[]>([]);
+  readonly data = input.required<StatItem[]>();
 
-
-  @Input({ required: true })
-  set data(value: StatItem[]) {
-    this.statsSignal.set(value);
-  }
-
-  stats = this.statsSignal.asReadonly();
+  stats = this.data;
 }

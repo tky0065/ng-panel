@@ -1,5 +1,5 @@
 // panel-sidebar.component.ts
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MenuItem } from '../../models/panel-config.model';
 
@@ -7,6 +7,7 @@ import { MenuItem } from '../../models/panel-config.model';
   selector: 'lib-panel-sidebar',
   standalone: true,
   imports: [RouterLink, RouterLinkActive],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <nav class="h-full ">
       <ul class="menu menu-vertical p-4">
