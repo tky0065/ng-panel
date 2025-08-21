@@ -20,3 +20,7 @@ export * from './lib/services/error-handler.service';
 
 // Models
 export * from './lib/models/panel-config.model';
+
+// Legacy NgModule (deprecated)
+/** @deprecated Use standalone components instead. This will be removed in v2.0 */
+export * from './lib/ng-panel.module';

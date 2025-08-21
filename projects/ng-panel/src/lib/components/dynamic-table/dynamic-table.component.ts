@@ -1,4 +1,4 @@
-import {Component, Input, inject, signal, computed, input} from '@angular/core';
+import {Component, inject, signal, computed, input, ChangeDetectionStrategy} from '@angular/core';
 
 import { PanelService } from '../../services/panel.service';
 
@@ -7,6 +7,7 @@ import { PanelService } from '../../services/panel.service';
   selector: 'lib-dynamic-table',
   standalone: true,
   imports: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="overflow-x-auto" [class.hidden]="!model()">
       <table class="table w-full">
@@ -26,7 +27,7 @@ import { PanelService } from '../../services/panel.service';
         </thead>
         <tbody>
           @if (model()) {
-            @for (item of datas(); track trackById($index, item)) {
+            @for (item of data(); track trackById($index, item)) {
               <tr>
                 @for (field of model()?.fields; track field) {
                   <td>
@@ -57,15 +58,10 @@ import { PanelService } from '../../services/panel.service';
 })
 export class DynamicTableComponent {
   readonly modelName = input.required<string>();
-
-  @Input({ required: true }) set data(value: any[]) {
-    this.dataSignal.set(value);
-  }
+  readonly data = input.required<any[]>();
 
   private panelService = inject(PanelService);
-  private dataSignal = signal<any[]>([]);
 
-  datas = this.dataSignal.asReadonly();
   model = computed(() => this.panelService.getModel(this.modelName()));
 
   trackById(index: number, item: any): any {

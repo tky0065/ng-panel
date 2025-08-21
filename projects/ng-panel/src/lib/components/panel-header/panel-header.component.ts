@@ -1,4 +1,4 @@
-import {Component, inject, signal, computed, input} from '@angular/core';
+import {Component, inject, signal, computed, input, ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { PanelService } from '../../services/panel.service';
@@ -8,6 +8,7 @@ import { ThemeConfig } from '../../models/panel-config.model';
   selector: 'lib-panel-header',
   standalone: true,
   imports: [RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <header class="navbar w-full bg-base-200 px-4 shadow-lg">
       <!-- Logo et titre -->

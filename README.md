@@ -19,7 +19,7 @@
 - **Accessibilité** WCAG compliant
 
 ### ⚡ Performance & Technique
-- **Angular 17+** avec composants standalone
+- **Angular 20+** avec composants standalone
 - **Signals** pour une gestion d'état reactive
 - **Lazy loading** pour des performances optimales
 - **TypeScript strict** avec IntelliSense complet
@@ -554,9 +554,9 @@ npm run publish:lib
 - ✅ Mobile browsers (iOS 14+, Android 8+)
 
 ### Versions Angular
-- ✅ Angular 17.x
-- ✅ Angular 18.x (prévu v1.2)
-- 🔜 Angular 19.x (roadmap v2.0)
+- ✅ Angular 19.x
+- ✅ Angular 20.x (current)
+- 🔜 Angular 21.x (roadmap v2.1)
 
 ## 🤝 Contribution
 
@@ -591,7 +591,7 @@ Suivez la convention [Conventional Commits](https://www.conventionalcommits.org/
 - [ ] Templates de pages prêts
 
 ### 🚀 Version 1.2 (Q2 2024) 
-- [ ] Angular 18 support
+- [ ] Angular 20 support ✅ **COMPLETED**
 - [ ] PWA optimizations
 - [ ] Advanced data grid
 - [ ] Real-time notifications

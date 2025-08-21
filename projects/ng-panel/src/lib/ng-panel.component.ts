@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'lib-ng-panel',
   imports: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <p>
       ng-panel works fine!

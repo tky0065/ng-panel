@@ -1,5 +1,5 @@
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { PanelService } from '../../services/panel.service';
 import { RouterOutlet } from '@angular/router';
 import { PanelHeaderComponent } from '../panel-header/panel-header.component';
@@ -10,6 +10,7 @@ import { ToastContainerComponent } from '../toast-container/toast-container.comp
 @Component({
   selector: 'lib-panel-layout',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 
   template: `
     <div class="flex flex-col h-screen bg-base-100">
