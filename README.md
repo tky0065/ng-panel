@@ -41,7 +41,7 @@
 npm install @enokdev/ng-panel @angular/common @angular/core @angular/forms @angular/router
 
 # 2. Installer TailwindCSS et DaisyUI  
-npm install tailwindcss daisyui autoprefixer postcss
+npm install tailwindcss@^4.1.0 @tailwindcss/postcss daisyui autoprefixer postcss
 
 # 3. Initialiser TailwindCSS
 npx tailwindcss init -p
@@ -63,10 +63,18 @@ module.exports = {
 
 **styles.css**
 ```css
-@tailwind base;
-@tailwind components; 
-@tailwind utilities;
+@import "tailwindcss";
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+```
+
+**postcss.config.js** (TailwindCSS 4.1+)
+```javascript
+module.exports = {
+  plugins: {
+    '@tailwindcss/postcss': {},
+    autoprefixer: {},
+  }
+}
 ```
 
 ### Premier Panel en 2 minutes
