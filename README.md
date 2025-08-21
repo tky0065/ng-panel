@@ -57,3 +57,18 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## CI/CD and Publishing
+
+This project includes automated CI/CD for publishing to NPM. See [CICD_SETUP.md](CICD_SETUP.md) for complete setup instructions and workflow documentation.
+
+### Quick Start for Contributors
+
+1. Create feature branches from `master`
+2. Submit pull requests to `prod` branch for release
+3. Use conventional commit messages for automatic version bumping:
+   - `feat:` for new features (minor version)
+   - `fix:` for bug fixes (patch version)  
+   - `BREAKING CHANGE:` for breaking changes (major version)
+
+The library will be automatically published to NPM when changes are merged to the `prod` branch.
