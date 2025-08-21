@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   imports: [],
   template: `
     <p>
-      ng-panel works!
+      ng-panel works fine!
     </p>
   `,
   styles: ""
