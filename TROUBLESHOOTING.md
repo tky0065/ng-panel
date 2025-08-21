@@ -64,11 +64,14 @@ Module not found: Error: Can't resolve 'tailwindcss'
 
 **Solution :**
 ```bash
-# Installer TailwindCSS et DaisyUI
-npm install tailwindcss daisyui autoprefixer postcss
+# Installer TailwindCSS 4.1+ et DaisyUI
+npm install tailwindcss@^4.1.0 @tailwindcss/postcss daisyui autoprefixer postcss
 
 # Initialiser TailwindCSS
 npx tailwindcss init -p
+
+# Pour TailwindCSS 3.x (legacy)
+npm install tailwindcss@^3.0.0 daisyui autoprefixer postcss
 ```
 
 ## Problèmes de Configuration
@@ -195,13 +198,33 @@ Ou utiliser le CDN dans `index.html` :
 
 ## Problèmes de Styles
 
+### TailwindCSS 4.1+ et Angular 20.x
+
+**Note importante :** TailwindCSS 4.1+ avec Angular 20.x peut avoir des limitations avec la détection automatique d'Angular. La bibliothèque ng-panel fonctionne parfaitement, mais les applications de test peuvent rencontrer des problèmes de build.
+
+**Symptôme :**
+```
+Error: It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. 
+The PostCSS plugin has moved to a separate package...
+```
+
+**Solution de contournement :**
+1. Utiliser TailwindCSS 3.x pour les applications complètes
+2. Ou attendre une mise à jour d'Angular pour le support complet de TailwindCSS 4.x
+3. La bibliothèque ng-panel elle-même fonctionne parfaitement avec TailwindCSS 4.1+
+
 ### TailwindCSS ne fonctionne pas
 
 **Symptôme :** Les classes Tailwind ne s'appliquent pas
 
 **Diagnostic :**
 ```css
-/* styles.css - Vérifiez ces imports */
+/* styles.css - Vérifiez ces imports (TailwindCSS 4.1+) */
+@import "tailwindcss";  /* ✅ Requis pour TailwindCSS 4.1+ */
+```
+
+**Pour TailwindCSS 3.x (legacy):**
+```css
 @tailwind base;     /* ✅ Requis */
 @tailwind components; /* ✅ Requis */
 @tailwind utilities;  /* ✅ Requis */
@@ -223,13 +246,24 @@ module.exports = {
 }
 ```
 
-2. **Vérifier postcss.config.js :**
+2. **Vérifier postcss.config.js (TailwindCSS 4.1+) :**
+```javascript
+module.exports = {
+  plugins: {
+    '@tailwindcss/postcss': {},
+    autoprefixer: {},
+  }
+}
+```
+
+3. **Pour TailwindCSS 3.x (legacy):**
 ```javascript
 module.exports = {
   plugins: {
     tailwindcss: {},
     autoprefixer: {},
   }
+}
 }
 ```
 

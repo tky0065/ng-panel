@@ -29,7 +29,7 @@ npm install @enokdev/ng-panel
 npm install @angular/common @angular/core @angular/forms @angular/router
 
 # Installer TailwindCSS et DaisyUI
-npm install tailwindcss daisyui autoprefixer postcss
+npm install tailwindcss@^4.1.0 @tailwindcss/postcss daisyui autoprefixer postcss
 ```
 
 ### Configuration Rapide
@@ -47,6 +47,21 @@ module.exports = {
     themes: true // Active tous les thèmes DaisyUI
   }
 }
+```
+
+2. **Configurer PostCSS** (postcss.config.js) :
+```javascript
+module.exports = {
+  plugins: {
+    '@tailwindcss/postcss': {},
+    autoprefixer: {},
+  }
+}
+```
+
+3. **Importer les styles** (styles.css) :
+```css
+@import "tailwindcss";
 ```
 
 2. **Configurer les styles** (src/styles.css) :
@@ -1085,8 +1100,8 @@ users = signal<User[]>([]);
 | ng-panel | Angular | Node.js | TailwindCSS | DaisyUI |
 |----------|---------|---------|-------------|---------|
 | 1.x      | 19.x    | 18.x    | 3.x         | 4.x     |
-| 2.x      | 20.x    | 20.x    | 3.x         | 4.x     |
-| 2.1+     | 21.x    | 22.x    | 3.x         | 4.x     |
+| 2.x      | 20.x    | 20.x    | 4.1+        | 4.x     |
+| 2.1+     | 21.x    | 22.x    | 4.1+        | 4.x     |
 
 ## 🛠️ Développement et Contribution
 
