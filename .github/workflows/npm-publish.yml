@@ -9,6 +9,10 @@ on:
   pull_request:
     branches: [ prod ]
 
+permissions:
+  contents: write  # Required for creating and pushing tags
+  packages: write  # Required for publishing packages
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
