@@ -9,6 +9,7 @@ A modern, dynamic admin panel library for Angular applications with DaisyUI and 
 npm install @enokdev/ng-panel
 
 # Install peer dependencies
+npm install @angular/common @angular/core @angular/forms @angular/router
 npm install tailwindcss daisyui
 ```
 
@@ -25,7 +26,7 @@ npx tailwindcss init
 module.exports = {
   content: [
     "./src/**/*.{html,ts}",
-    "./node_modules/@enokdev/ng-panel/**/*.{html,ts}"  // Add this line to include ng-panel components
+    "./node_modules/@enokdev/ng-panel/**/*.{html,ts,js,mjs}"  // Add this line to include ng-panel components
   ],
   plugins: [require("daisyui")],
   daisyui: {
@@ -39,6 +40,9 @@ module.exports = {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Optional: Import ng-panel styles */
+@import '@enokdev/ng-panel/styles/styles.css';
 ```
 
 4. Add PostCSS configuration (postcss.config.js):
@@ -55,7 +59,7 @@ module.exports = {
 
 1. In your app.component.ts:
 ```typescript
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PanelLayoutComponent, PanelService } from '@enokdev/ng-panel';
 
 @Component({
@@ -71,6 +75,22 @@ export class AppComponent implements OnInit {
     this.panelService.setConfig({
       title: 'Admin Panel',
       logo: 'assets/logo.png',
+      profileConfig: {
+        avatar: 'assets/avatar.png',
+        username: 'Admin User',
+        actions: [
+          {
+            label: 'Profile',
+            icon: 'person',
+            route: '/profile'
+          },
+          {
+            label: 'Logout',
+            icon: 'logout',
+            action: () => console.log('Logout')
+          }
+        ]
+      },
       menu: [
         {
           label: 'Dashboard',
@@ -91,44 +111,44 @@ export class AppComponent implements OnInit {
 2. Create a dashboard component (dashboard.component.ts):
 ```typescript
 import { Component } from '@angular/core';
-import { DynamicStatsComponent } from '@enokdev/ng-panel';
+import { DynamicStatsComponent, StatItem } from '@enokdev/ng-panel';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [DynamicStatsComponent],
   template: `
-    <div class="p-4">
-      <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
-      <lib-dynamic-stats [data]="statsData"/>
+    <div class="p-6">
+      <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+      <lib-dynamic-stats [data]="stats"/>
     </div>
   `
 })
 export class DashboardComponent {
-  statsData = [
+  stats: StatItem[] = [
     {
-      title: 'Users',
-      value: 150,
-      color: 'bg-violet-600',
+      title: 'Total Users',
+      value: 1250,
+      color: 'bg-blue-500',
       icon: 'people'
     },
     {
-      title: 'Products',
-      value: 1234,
-      color: 'bg-pink-500',
-      icon: 'inventory_2'
+      title: 'Revenue',
+      value: 45000,
+      color: 'bg-green-500',
+      icon: 'attach_money'
     },
     {
-      title: 'Sales',
-      value: 45678,
-      color: 'bg-teal-500',
+      title: 'Orders',
+      value: 892,
+      color: 'bg-purple-500',
       icon: 'shopping_cart'
     }
   ];
 }
 ```
 
-3. Configure your routes (app.routes.ts):
+3. Set up routing in your app.routes.ts:
 ```typescript
 import { Routes } from '@angular/router';
 
@@ -137,6 +157,16 @@ export const routes: Routes = [
     path: 'dashboard',
     loadComponent: () => import('./features/dashboard/dashboard.component')
       .then(m => m.DashboardComponent)
+  },
+  {
+    path: 'users',
+    loadComponent: () => import('./features/users/users.component')
+      .then(m => m.UsersComponent)
+  },
+  {
+    path: '',
+    redirectTo: '/dashboard',
+    pathMatch: 'full'
   }
   // Add more routes as needed
 ];
@@ -144,7 +174,7 @@ export const routes: Routes = [
 
 ## Available Components
 
-1. Dynamic Table:
+1. **Dynamic Table**:
 ```typescript
 <lib-dynamic-table
   modelName="user"
@@ -152,20 +182,35 @@ export const routes: Routes = [
 />
 ```
 
-2. Dynamic Form:
+2. **Dynamic Form**:
 ```typescript
 <lib-dynamic-form
   modelName="user"
   [initialData]="userData"
   (onSubmit)="handleSubmit($event)"
+  (onCancel)="handleCancel()"
 />
 ```
 
-3. Dynamic Stats:
+3. **Dynamic Stats**:
 ```typescript
 <lib-dynamic-stats
   [data]="statsData"
 />
+```
+
+4. **Toast Notifications**:
+```typescript
+// Inject ToastService and use it
+constructor(private toastService: ToastService) {}
+
+showSuccess() {
+  this.toastService.success('Success!', 'Operation completed successfully');
+}
+
+showError() {
+  this.toastService.error('Error!', 'Something went wrong');
+}
 ```
 
 ## API Reference
@@ -181,6 +226,7 @@ interface PanelConfig {
     accent: string;
   };
   menu: MenuItem[];
+  profileConfig?: ProfileConfig;
 }
 
 interface MenuItem {
@@ -189,19 +235,74 @@ interface MenuItem {
   route?: string;
   children?: MenuItem[];
 }
+
+interface ProfileConfig {
+  avatar?: string;
+  username?: string;
+  actions: ProfileAction[];
+}
 ```
+
+### ModelConfig Interface
+```typescript
+interface ModelConfig {
+  name: string;
+  fields: FieldConfig[];
+  actions?: ActionConfig[];
+  list?: ListConfig;
+  form?: FormConfig;
+}
+
+interface FieldConfig {
+  name: string;
+  type: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'email' | 'password';
+  label: string;
+  required?: boolean;
+  options?: { label: string; value: any }[];
+  validators?: any[];
+}
+```
+
+## Services
+
+### PanelService
+Manages global configuration and model definitions.
+
+### ToastService
+Provides notification functionality with different types (success, error, warning, info).
+
+### NgPanelErrorHandler
+Handles errors gracefully with user-friendly messages.
 
 ## Customization
 
-You can customize the theme using DaisyUI themes. Add the theme selector in your header component:
+You can customize the theme using DaisyUI themes. The header component includes a theme selector:
 
 ```typescript
-<select data-choose-theme class="select select-bordered select-sm">
-  <option value="light">Light</option>
-  <option value="dark">Dark</option>
-  <option value="cupcake">Cupcake</option>
-</select>
+// Themes are automatically available in the header dropdown
+// You can also set themes programmatically:
+document.documentElement.setAttribute('data-theme', 'dark');
 ```
+
+## Features
+
+- ✅ Responsive design with TailwindCSS
+- ✅ Multiple DaisyUI theme support
+- ✅ Dynamic form generation with validation
+- ✅ Dynamic table with actions
+- ✅ Toast notifications
+- ✅ Profile management
+- ✅ Hierarchical menu support
+- ✅ Error handling
+- ✅ TypeScript support
+- ✅ Standalone components (Angular 17+)
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
 
 ## Contributing
 

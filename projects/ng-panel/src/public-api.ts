@@ -11,9 +11,12 @@ export * from './lib/components/panel-footer/panel-footer.component';
 export * from './lib/components/dynamic-table/dynamic-table.component';
 export * from './lib/components/dynamic-form/dynamic-form.component';
 export * from './lib/components/stat-card/stat-card.component';
+export * from './lib/components/toast-container/toast-container.component';
 
 // Services
 export * from './lib/services/panel.service';
+export * from './lib/services/toast.service';
+export * from './lib/services/error-handler.service';
 
 // Models
 export * from './lib/models/panel-config.model';
