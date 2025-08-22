@@ -1,7 +1,7 @@
 
 {
   "name": "@enokdev/ng-panel",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "A dynamic admin panel library for Angular applications",
   "keywords": ["angular", "admin", "dashboard", "panel", "ui", "components","tailwindcss", "daisyui"],
   "author": "Enokdev",
