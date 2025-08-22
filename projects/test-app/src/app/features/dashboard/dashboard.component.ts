@@ -19,21 +19,33 @@ export class DashboardComponent {
   statsData: StatItem[] = [
     {
       title: 'Utilisateurs',
-      value: 150,
+      value: 150, // ✅ number value
       color: 'bg-violet-600',
-      icon: 'people'
+      icon: 'people',
+      change: { // ✅ Now supported - shows trend
+        value: 12,
+        type: 'increase'
+      }
     },
     {
-      title: 'Produits',
-      value: 1234,
+      title: 'Chiffre d\'affaires',
+      value: '€45.6K', // ✅ string value now supported
       color: 'bg-pink-500',
-      icon: 'inventory_2'
+      icon: 'attach_money',
+      change: { // ✅ Now supported - shows trend
+        value: 8,
+        type: 'increase'
+      }
     },
     {
       title: 'Ventes',
-      value: 45678,
+      value: 45678, // ✅ number value
       color: 'bg-teal-500',
-      icon: 'shopping_cart'
+      icon: 'shopping_cart',
+      change: { // ✅ Now supported - shows trend
+        value: -3,
+        type: 'decrease'
+      }
     }
   ];
 }

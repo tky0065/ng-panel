@@ -1,5 +1,5 @@
 import {Component, inject, computed, input, output, OnInit, ChangeDetectionStrategy, effect} from '@angular/core';
-import { FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
 
 import { ModelConfig } from '../../models/panel-config.model';
 import { PanelService } from '../../services/panel.service';
@@ -29,7 +29,7 @@ import { PanelService } from '../../services/panel.service';
                     [formControlName]="field.name"
                     [class]="getFieldClasses(field.name)"
                     class="select select-bordered">
-                    <option value="">Select an option</option>
+                    <option value="">{{ field.placeholder || 'Select an option' }}</option>
                     @for (option of field.options; track option) {
                       <option
                         [value]="option.value">
@@ -38,17 +38,77 @@ import { PanelService } from '../../services/panel.service';
                     }
                   </select>
                 }
+                @case ('multiselect') {
+                  <select
+                    [formControlName]="field.name"
+                    [class]="getFieldClasses(field.name)"
+                    class="select select-bordered"
+                    multiple>
+                    @for (option of field.options; track option) {
+                      <option
+                        [value]="option.value">
+                        {{ option.label }}
+                      </option>
+                    }
+                  </select>
+                }
+                @case ('textarea') {
+                  <textarea
+                    [formControlName]="field.name"
+                    [class]="getFieldClasses(field.name)"
+                    [placeholder]="field.placeholder || ''"
+                    [rows]="field.rows || 3"
+                    class="textarea textarea-bordered">
+                  </textarea>
+                }
+                @case ('file') {
+                  <input
+                    type="file"
+                    [formControlName]="field.name"
+                    [class]="getFieldClasses(field.name)"
+                    [accept]="field.accept || ''"
+                    [multiple]="field.multiple || false"
+                    class="file-input file-input-bordered"/>
+                }
                 @case ('boolean') {
                   <input
                     type="checkbox"
                     [formControlName]="field.name"
                     class="toggle"/>
                 }
+                @case ('group') {
+                  <div class="border rounded-lg p-4 space-y-4">
+                    @if (field.fields) {
+                      @for (subField of field.fields; track subField) {
+                        <div class="form-control">
+                          <label class="label">
+                            <span class="label-text">
+                              {{ subField.label }}
+                              @if (subField.required) {
+                                <span class="text-red-500">*</span>
+                              }
+                            </span>
+                          </label>
+                          <!-- Recursive field rendering would go here -->
+                          <input
+                            [type]="subField.type"
+                            [formControlName]="subField.name"
+                            [placeholder]="subField.placeholder || ''"
+                            class="input input-bordered"/>
+                        </div>
+                      }
+                    }
+                  </div>
+                }
                 @default {
                   <input
                     [type]="field.type"
                     [formControlName]="field.name"
                     [class]="getFieldClasses(field.name)"
+                    [placeholder]="field.placeholder || ''"
+                    [min]="field.min"
+                    [max]="field.max"
+                    [step]="field.step"
                     class="input input-bordered"/>
                 }
               }
@@ -75,6 +135,7 @@ import { PanelService } from '../../services/panel.service';
 export class DynamicFormComponent implements OnInit {
   readonly modelName = input.required<string>();
   readonly initialData = input<any>();
+  readonly customValidators = input<{ [key: string]: (control: AbstractControl) => any }>();
 
   readonly onSubmit = output<any>();
   readonly onCancel = output<void>();
@@ -104,6 +165,8 @@ export class DynamicFormComponent implements OnInit {
 
   private createForm(modelConfig: ModelConfig): FormGroup {
     const group: any = {};
+    const customValidators = this.customValidators();
+    
     for (const field of modelConfig.fields) {
       const validators = [];
       
@@ -115,8 +178,21 @@ export class DynamicFormComponent implements OnInit {
         validators.push(Validators.email);
       }
       
+      if (field.type === 'number' && field.min !== undefined) {
+        validators.push(Validators.min(field.min));
+      }
+      
+      if (field.type === 'number' && field.max !== undefined) {
+        validators.push(Validators.max(field.max));
+      }
+      
       if (field.validators) {
         validators.push(...field.validators);
+      }
+      
+      // Add custom validators
+      if (customValidators && customValidators[field.name]) {
+        validators.push(customValidators[field.name]);
       }
       
       group[field.name] = ['', validators];

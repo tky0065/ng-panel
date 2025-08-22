@@ -15,6 +15,8 @@ export interface MenuItem {
   icon?: string;
   route?: string;
   children?: MenuItem[];
+  badge?: string;
+  type?: 'divider';
 }
 
 export interface ModelConfig {
@@ -27,11 +29,21 @@ export interface ModelConfig {
 
 export interface FieldConfig {
   name: string;
-  type: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'email' | 'password';
+  type: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'email' | 'password' | 'textarea' | 'multiselect' | 'group' | 'file' | 'datetime-local' | 'time';
   label: string;
   required?: boolean;
+  placeholder?: string;
   options?: { label: string; value: any }[];
   validators?: any[];
+  min?: number;
+  max?: number;
+  step?: number;
+  rows?: number;
+  multiple?: boolean;
+  accept?: string;
+  maxFiles?: number;
+  dependsOn?: string;
+  fields?: FieldConfig[]; // For group type
 }
 
 export interface ActionConfig {
@@ -40,6 +52,8 @@ export interface ActionConfig {
   icon?: string;
   type: 'primary' | 'secondary' | 'danger';
   handler?: (item: any) => void;
+  condition?: (item: any) => boolean;
+  confirmMessage?: string;
 }
 
 export interface ListConfig {
