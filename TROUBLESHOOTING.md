@@ -52,8 +52,9 @@ npm install @enokdev/ng-panel@latest
 
 | ng-panel | Angular | Node.js |
 |----------|---------|---------|
-| 1.x.x    | 17.x.x  | 18.x.x  |
-| 2.x.x    | 18.x.x  | 20.x.x  |
+| 0.1.x    | 19.x, 20.x | 18.x, 20.x |
+| 1.x.x    | 19.x, 20.x | 18.x, 20.x |
+| 2.x.x    | 20.x, 21.x | 20.x, 22.x |
 
 ### Erreur : TailwindCSS non trouvé
 
