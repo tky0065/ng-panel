@@ -46,7 +46,8 @@ export class AppComponent implements OnInit {
         {
           label: 'Dashboard',
           icon: 'dashboard',
-          route: '/dashboard'
+          route: '/dashboard',
+          badge: '2' // ✅ Now supported - shows notification count
         },
         {
           label: 'Gestion',
@@ -55,7 +56,8 @@ export class AppComponent implements OnInit {
             {
               label: 'Utilisateurs',
               icon: 'people',
-              route: '/users'
+              route: '/users',
+              badge: 'NEW' // ✅ Now supported - shows "NEW" badge
             },
             {
               label: 'Produits',
@@ -63,6 +65,15 @@ export class AppComponent implements OnInit {
               route: '/products'
             }
           ]
+        },
+        {
+          type: 'divider', // ✅ Now supported - creates a menu separator
+          label: 'Administration'
+        },
+        {
+          label: 'Paramètres',
+          icon: 'settings',
+          route: '/settings'
         }
       ]
     });
@@ -79,24 +90,43 @@ export class AppComponent implements OnInit {
           name: 'firstName',
           type: 'text',
           label: 'Prénom',
+          placeholder: 'Entrez le prénom', // ✅ Now supported
           required: true
         },
         {
           name: 'lastName',
           type: 'text',
           label: 'Nom',
+          placeholder: 'Entrez le nom', // ✅ Now supported
           required: true
         },
         {
           name: 'email',
-          type: 'text',
+          type: 'email',
           label: 'Email',
+          placeholder: 'exemple@email.com', // ✅ Now supported
           required: true
+        },
+        {
+          name: 'bio',
+          type: 'textarea', // ✅ Now supported
+          label: 'Bio',
+          placeholder: 'Décrivez-vous...', // ✅ Now supported
+          rows: 3 // ✅ Now supported
+        },
+        {
+          name: 'age',
+          type: 'number',
+          label: 'Âge',
+          min: 18, // ✅ Now supported
+          max: 100, // ✅ Now supported
+          step: 1 // ✅ Now supported
         },
         {
           name: 'role',
           type: 'select',
           label: 'Rôle',
+          placeholder: 'Sélectionnez un rôle', // ✅ Now supported
           options: [
             { label: 'Admin', value: 'admin' },
             { label: 'User', value: 'user' }
@@ -108,13 +138,15 @@ export class AppComponent implements OnInit {
           name: 'edit',
           label: 'Modifier',
           type: 'primary',
-          icon: 'edit'
+          icon: 'edit',
+          condition: (item) => item.status !== 'archived' // ✅ Now supported
         },
         {
           name: 'delete',
           label: 'Supprimer',
           type: 'danger',
-          icon: 'trash'
+          icon: 'delete',
+          confirmMessage: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?' // ✅ Now supported
         }
       ],
       list: {
