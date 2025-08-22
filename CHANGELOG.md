@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.4] - 2025-08-22
+
+### Fixed
+- Fixed NPM publishing version conflict by bumping to next available version
+
 ### Changed
 - **BREAKING**: Upgraded Angular from 19.x to 20.x
 - Migrated all components to use modern Angular 20 patterns:
