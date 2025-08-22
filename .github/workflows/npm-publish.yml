@@ -75,8 +75,24 @@ jobs:
         id: version
         run: |
           # Get the current version from package.json
-          CURRENT_VERSION=$(node -p "require('./projects/ng-panel/package.json').version")
-          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          LOCAL_VERSION=$(node -p "require('./projects/ng-panel/package.json').version")
+          echo "local_version=$LOCAL_VERSION" >> $GITHUB_OUTPUT
+          
+          # Get the latest published version from npm
+          NPM_VERSION=$(npm view @enokdev/ng-panel version 2>/dev/null || echo "0.0.0")
+          echo "npm_version=$NPM_VERSION" >> $GITHUB_OUTPUT
+          echo "Local version: $LOCAL_VERSION"
+          echo "NPM version: $NPM_VERSION"
+          
+          # Use the higher version as base for next version calculation
+          BASE_VERSION=$(node -e "
+            const semver = require('semver');
+            const local = '$LOCAL_VERSION';
+            const npm = '$NPM_VERSION';
+            console.log(semver.gt(local, npm) ? local : npm);
+          ")
+          echo "base_version=$BASE_VERSION" >> $GITHUB_OUTPUT
+          echo "Base version for calculation: $BASE_VERSION"
           
           # Check commit messages for version bump indicators
           COMMIT_MSG=$(git log -1 --pretty=%B)
@@ -89,10 +105,34 @@ jobs:
           fi
           echo "bump_type=$BUMP_TYPE" >> $GITHUB_OUTPUT
           
-          # Calculate new version
-          NEW_VERSION=$(npx semver $CURRENT_VERSION -i $BUMP_TYPE)
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "New version will be: $NEW_VERSION (bump: $BUMP_TYPE)"
+          # Calculate new version from base version
+          NEW_VERSION=$(npx semver $BASE_VERSION -i $BUMP_TYPE)
+          echo "Calculated version: $NEW_VERSION (bump: $BUMP_TYPE from base: $BASE_VERSION)"
+          
+          # Check for version conflicts and resolve them
+          ATTEMPTS=0
+          MAX_ATTEMPTS=5
+          FINAL_VERSION=$NEW_VERSION
+          
+          while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
+            if npm view @enokdev/ng-panel@$FINAL_VERSION version >/dev/null 2>&1; then
+              echo "Warning: Version $FINAL_VERSION already exists on npm!"
+              FINAL_VERSION=$(npx semver $FINAL_VERSION -i patch)
+              echo "Trying next version: $FINAL_VERSION"
+              ATTEMPTS=$((ATTEMPTS + 1))
+            else
+              echo "✅ Version $FINAL_VERSION is available"
+              break
+            fi
+          done
+          
+          if [ $ATTEMPTS -ge $MAX_ATTEMPTS ]; then
+            echo "❌ Error: Could not find available version after $MAX_ATTEMPTS attempts"
+            exit 1
+          fi
+          
+          echo "new_version=$FINAL_VERSION" >> $GITHUB_OUTPUT
+          echo "Final version will be: $FINAL_VERSION"
       
       - name: Update version in package.json
         run: |
