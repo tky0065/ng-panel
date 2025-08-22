@@ -646,7 +646,7 @@ La bibliothèque sera automatiquement publiée sur NPM lors du merge vers la bra
 - 📖 **Documentation**: [README complet](./README.md)
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/tky0065/ng-panel/issues)
 - 💭 **Questions**: [GitHub Discussions](https://github.com/tky0065/ng-panel/discussions)
-- 📧 **Contact**: support@enokdev.com
+- 📧 **Contact**: enokdev.bf@orange.com
 
 ### 🔗 Liens Utiles
 - 🌐 **Site Web**: [enokdev.com](https://enokdev.com)
@@ -665,7 +665,7 @@ Ce projet est sous licence **MIT**. Voir [LICENSE](./LICENSE) pour plus de déta
 
 Merci à la communauté **Angular**, **TailwindCSS** et **DaisyUI** pour leurs outils extraordinaires !
 
-**Développé avec ❤️ par [EnokDev](https://enokdev.com)**
+**Développé avec ❤️ par [EnokDev](https://app.enokdev.com)**
 
 [⭐ Star sur GitHub](https://github.com/tky0065/ng-panel) • [📦 NPM Package](https://www.npmjs.com/package/@enokdev/ng-panel) • [🐛 Signaler un Bug](https://github.com/tky0065/ng-panel/issues)
 
