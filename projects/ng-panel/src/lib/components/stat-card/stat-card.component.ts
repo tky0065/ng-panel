@@ -2,10 +2,14 @@ import { Component, input, signal, ChangeDetectionStrategy } from '@angular/core
 
 export interface StatItem {
   title: string;
-  value: number;
+  value: number | string;
   color: string;
   icon?: string; // Nom de l'icône Material
   iconClass?: string; // Classes CSS additionnelles pour l'icône
+  change?: {
+    value: number;
+    type: string;
+  };
 }
 
 @Component({
