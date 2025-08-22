@@ -108,6 +108,24 @@ git commit -m "docs: update installation instructions"
 git commit -m "style: fix button alignment issues"
 ```
 
+### Intelligent Version Conflict Resolution
+
+The CI/CD pipeline now includes intelligent version conflict detection and resolution:
+
+1. **Version Source Comparison**: Compares local `package.json` version with the latest published NPM version
+2. **Smart Base Version Selection**: Uses the higher of the two versions as the base for calculation
+3. **Automatic Conflict Resolution**: If the calculated version already exists on NPM:
+   - Automatically increments to the next patch version
+   - Repeats up to 5 times until an available version is found
+   - Fails gracefully if no version can be found after 5 attempts
+4. **Detailed Logging**: Provides clear feedback about version resolution process
+
+Example scenario:
+- Local version: `0.1.4`
+- NPM version: `0.1.5` 
+- Commit: `fix: resolve bug`
+- Result: Uses `0.1.5` as base → calculates `0.1.6` → publishes `0.1.6`
+
 ## Workflow Steps
 
 ### Build and Test Job
@@ -124,9 +142,13 @@ git commit -m "style: fix button alignment issues"
 Only runs when pushing to `prod` branch:
 
 1. **Download build artifacts** from the build job
-2. **Determine version bump** based on commit messages
+2. **Intelligent version calculation**:
+   - Compare local and NPM versions
+   - Determine appropriate bump type from commit messages
+   - Calculate next version with conflict resolution
+   - Ensure version availability on NPM
 3. **Update package.json** with new version
-4. **Rebuild library** with updated version
+4. **Rebuild library** with updated version  
 5. **Publish to NPM** with public access
 6. **Create Git tag** for the new version
 
@@ -152,6 +174,21 @@ npm run pack:lib
 
 # Publish library manually
 npm run publish:lib
+```
+
+### CI/CD Testing Scripts
+
+Validate the CI/CD workflow logic locally before pushing:
+
+```bash
+# Test version bump logic with various commit message scenarios
+node scripts/test-version-logic.js
+
+# Test version conflict resolution
+node scripts/test-conflict-resolution.js
+
+# Comprehensive workflow simulation (reproduces and validates the fix)
+bash scripts/test-full-workflow.sh
 ```
 
 ## Development Workflow
@@ -194,9 +231,14 @@ npm run publish:lib
    - Error: `401 Unauthorized`
    - Solution: Generate a new NPM token and update GitHub secrets
 
-2. **Version Already Exists**
-   - Error: `403 Forbidden` or version conflict
-   - Solution: The workflow handles this automatically with semver bumping
+2. **Version Already Exists / Version Conflicts**
+   - Error: `403 Forbidden` - You cannot publish over the previously published versions
+   - **Solution**: The workflow now automatically detects version conflicts and resolves them:
+     - Compares local package.json version with latest NPM version
+     - Uses the higher version as base for calculations
+     - Automatically increments to next available version if conflicts occur
+     - Supports up to 5 retry attempts to find an available version
+   - **Prevention**: Keep your local package.json version in sync with NPM releases
 
 3. **Build Failures**
    - Check the build logs in GitHub Actions
